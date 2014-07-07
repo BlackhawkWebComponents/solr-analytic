@@ -1,0 +1,40 @@
+{
+  "name": "solr-analytic",
+  "homepage": "http://blackhawkwebcomponents.github.io/solr-analytic",
+  "description": "",
+  "main": "solr-analytic.html",
+  "authors": [
+    "Rob Beers"
+  ],
+  "license": "Apache2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "../"
+  ],
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#master",
+    "analytic-base": "BlackhawkWebComponents/analytic-base",
+    "solr-api": "BlackhawkWebComponents/solr-api",
+    "solr-query": "BlackhawkWebComponents/solr-query",
+    "chart-js": "BlackhawkWebComponents/chart-js#master"
+  },
+  "_release": "9100e050f7",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "9100e050f7198d1b60febc946135bbcbb8e971e6"
+  },
+  "_source": "git://github.com/BlackhawkWebComponents/solr-analytic.git",
+  "_target": "master",
+  "_originalSource": "BlackhawkWebComponents/solr-analytic",
+  "_direct": true
+}

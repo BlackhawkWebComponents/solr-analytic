@@ -1,0 +1,84 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../chart-js/chart-js.html">
+
+<!--
+Element providing ..
+
+##### Example
+
+    <analytic-base
+        title=""
+    </analytic-base>
+
+@element analytic-base
+@blurb Element providing ..
+@status alpha
+@url http://blackhawkwebcomponents.github.io/analytic-base
+
+TODO: remove title and all references in demos
+-->
+<polymer-element name="analytic-base" attributes="title chartType limit target showLegend">
+    <script>
+        Polymer('analytic-base', {
+
+            /**
+             * Fired when a analytic item is clicked on chart
+             *
+             * @event analytic-item-selected
+             */
+
+            /**
+             * A title to be displayed on top of the analytic.
+             * @attribute title
+             * @type string
+             */
+            title: 'My Analytic',
+
+            /**
+             * Type of chart (Bar, Pie, Line, Radar, Doughnut, PolarArea)
+             * @attribute chartType
+             * @type string
+             * @default Bar
+             */
+            chartType: 'Bar',
+
+            /**
+             * Displays a legend on the chart (Pie, Doughnut, PolarArea)
+             * @attribute showLegend
+             * @type boolean
+             * @default false
+             */
+            showLegend: false,
+
+            /**
+             * Limit rows returned
+             * @attribute limit
+             * @type integer
+             * @default null
+             */
+            limit:null,
+
+            /**
+             * Flag to know whether query is running
+             * @attribute queryRunning
+             * @type boolean
+             * @default false
+             */
+            queryRunning: false,
+
+            /**
+             * Flag to know whether chart is ready
+             * @attribute chartReady
+             * @type boolean
+             * @default false
+             */
+            chartReady: false,
+
+
+            json: function(value) {
+                return JSON.stringify(value, null, 2);
+            }
+        });
+    </script>
+</polymer-element>
+

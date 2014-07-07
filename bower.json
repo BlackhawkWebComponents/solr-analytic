@@ -1,0 +1,7 @@
+{
+  "name": "solr-analytic#gh-pages",
+  "private": true,
+  "dependencies": {
+    "solr-analytic": "BlackhawkWebComponents/solr-analytic#master"
+  }
+}

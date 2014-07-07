@@ -1,0 +1,35 @@
+{
+  "name": "query-base",
+  "homepage": "http://blackhawkwebcomponents.github.io/query-base",
+  "description": "",
+  "main": "query-base.html",
+  "authors": [
+    "Rob Beers"
+  ],
+  "license": "Apache2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "../"
+  ],
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#master"
+  },
+  "_release": "d1007ea1e3",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d1007ea1e318f703aa7677df55f27a744261fa9d"
+  },
+  "_source": "git://github.com/BlackhawkWebComponents/query-base.git",
+  "_target": "*",
+  "_originalSource": "BlackhawkWebComponents/query-base"
+}

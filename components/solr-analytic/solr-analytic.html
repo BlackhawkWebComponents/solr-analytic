@@ -1,0 +1,206 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../analytic-base/analytic-base.html">
+<link rel="import" href="../solr-api/solr-api.html">
+<link rel="import" href="../solr-query/solr-query.html">
+<link rel="import" href="../chart-js/chart-js.html">
+
+
+<!--
+Element providing analytic graph for google big query
+
+##### Example
+
+    <solr-analytic
+        title="Actor Known Groups"
+        baseUrl="http://localhost:8983/solr/
+        chartType="bar">
+
+       <q-select>
+            <q-field expr="name"></q-field>
+            <q-field expr="id"></q-field>
+            <q-field expr="score"></q-field>
+        </q-select>
+        <q-from>
+            <q-dataset name="collection1"></q-dataset>
+        </q-from>
+        <q-where>
+            <q-condition field="name" op="equals" value="Foo"></q-condition>
+        </q-where>
+
+    </solr-analytic>
+
+@element solr-analytic
+@blurb Element providing analytic graph for google big query
+@status alpha
+@extends analytic-base
+@url http://blackhawkwebcomponents.github.io/solr-analytic
+
+TODO: create proper loading icon from solr-search-app loading example, animate transition
+-->
+
+<polymer-element name="solr-analytic"
+                 extends="analytic-base"
+                 attributes="baseUrl"
+                 on-query-change="{{queryChanged}}">
+    <template>
+        <style>
+            :host {
+                display: block;
+                position: relative;
+            }
+        </style>
+
+        <solr-query baseUrl="{{baseUrl}}" limit="{{limit}}"
+                on-query-change="{{solrQueryChanged}}">
+            <content select="q-select"></content>
+            <content select="q-from"></content>
+            <content select="q-where"></content>
+            <content select="q-group-by"></content>
+        </solr-query>
+
+        <solr-api id="solr"
+                  url="{{query.url}}"
+                  on-solr-response="{{gotSolrResponse}}">
+        </solr-api>
+
+        <template if="{{chartReady}}">
+            <chart-js
+                    kind="{{chartType}}"
+                    showLegend="{{showLegend}}"
+                    data="{{chartData}}"
+                    on-chart-items-selected="{{analyticItemSelected}}">
+            </chart-js>
+        </template>
+        <template if="{{queryRunning}}">
+            <!-- TODO: add loading icon here -->
+        </template>
+
+    </template>
+    <script>
+        Polymer('solr-analytic', {
+
+            created: function () {
+                // assuming bar format for now
+                this.chartData = {};
+            },
+            gotSolrResponse: function(event, detail) {
+                this.queryRunning = false;
+                this.response = detail.response;
+                this.chartData = this.chartFormat(this.response);
+                this.chartReady = true;
+            },
+            solrQueryChanged: function(event, detail) {
+                this.query = detail.query;
+                this.queryRunning = true;
+                this.$.solr.go();
+            },
+            /* assuming facet query for now */
+            chartFormat: function(value) {
+                var solrResponse = value;
+                var labels = [];
+                var data = [];
+                if (solrResponse && solrResponse.facet_counts && solrResponse.facet_counts.facet_fields) {
+                    var facetFieldVals = solrResponse.facet_counts.facet_fields[
+                            solrResponse.responseHeader.params['facet.field']];
+
+                    for (var i = 0 ; i < facetFieldVals.length; ++i) {
+                        if ((i%2) == 0) {
+                            // not sure if we can filter in solr to only return values > 0 but we will filter
+                            // them out here.  TODO: look into filtering out counts=0 in solr
+                            if (facetFieldVals[i+1] > 0) {
+                                labels.push(facetFieldVals[i]);
+                                data.push(facetFieldVals[i+1]);
+                            }
+                        }
+                    }
+                }
+
+                var chartFormat;
+                if (this.chartType == 'Bar') {
+                    chartFormat = {
+                        labels: labels,
+                        datasets: [{
+                            fillColor : "rgba(239,241,245,1)",
+                            strokeColor : "rgba(0,0,0,0)",
+                            highlightFill: "rgba(230,233,240,1)",
+                            data: data
+                        }]
+                    };
+                } else if (this.chartType == 'Pie' || this.chartType == 'Doughnut' || this.chartType == 'PolarArea') {
+                    // TODO: support more than 10 colors, will break if data is > 10
+                    chartFormat = [];
+                    for (var i = 0; i < data.length; ++i ) {
+                        chartFormat.push(
+                            {
+                                value: data[i],
+                                color:colors[i].color,
+                                highlight: colors[i].highlight,
+                                label: labels[i]
+                            }
+                        )
+                    }
+                }
+
+                return chartFormat;
+            },
+            analyticItemSelected: function(event, detail) {
+                this.fire('analytic-item-selected', detail);
+            }
+        });
+
+        var red = "#bf616a",
+            blue = "#5B90BF",
+            orange = "#d08770",
+            yellow = "#ebcb8b",
+            green = "#a3be8c",
+            teal = "#96b5b4",
+            pale_blue = "#8fa1b3",
+            purple = "#b48ead",
+            brown = "#ab7967";
+            pink = "#e81d62";
+
+        var colors = [
+            {'color':red, 'highlight':Color(red,10)},
+            {'color':blue, 'highlight':Color(blue,10)},
+            {'color':orange, 'highlight':Color(orange,10)},
+            {'color':yellow, 'highlight':Color(yellow,10)},
+            {'color':green, 'highlight':Color(green,10)},
+            {'color':teal, 'highlight':Color(teal,10)},
+            {'color':pale_blue, 'highlight':Color(pale_blue,10)},
+            {'color':purple, 'highlight':Color(purple,10)},
+            {'color':brown, 'highlight':Color(brown,10)},
+            {'color':pink, 'highlight':Color(pink,10)}
+        ]
+
+        function Color(col, amt) {
+
+            var usePound = false;
+
+            if (col[0] == "#") {
+                col = col.slice(1);
+                usePound = true;
+            }
+
+            var num = parseInt(col,16);
+
+            var r = (num >> 16) + amt;
+
+            if (r > 255) r = 255;
+            else if  (r < 0) r = 0;
+
+            var b = ((num >> 8) & 0x00FF) + amt;
+
+            if (b > 255) b = 255;
+            else if  (b < 0) b = 0;
+
+            var g = (num & 0x0000FF) + amt;
+
+            if (g > 255) g = 255;
+            else if (g < 0) g = 0;
+
+            return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+
+        }
+    </script>
+</polymer-element>
+
