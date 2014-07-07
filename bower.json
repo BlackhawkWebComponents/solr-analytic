@@ -26,6 +26,6 @@
         "analytic-base" : "BlackhawkWebComponents/analytic-base",
         "solr-api": "BlackhawkWebComponents/solr-api",
         "solr-query": "BlackhawkWebComponents/solr-query",
-        "chart-js": "BlackhawkWebComponents/chart-js"
+        "chart-js": "BlackhawkWebComponents/chart-js#master"
     }
 }
