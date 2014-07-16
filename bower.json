@@ -25,7 +25,6 @@
         "polymer": "Polymer/polymer#master",
         "analytic-base" : "BlackhawkWebComponents/analytic-base",
         "solr-api": "BlackhawkWebComponents/solr-api",
-        "solr-query": "BlackhawkWebComponents/solr-query",
-        "chart-js": "BlackhawkWebComponents/chart-js#master"
+        "solr-query": "BlackhawkWebComponents/solr-query"
     }
 }
